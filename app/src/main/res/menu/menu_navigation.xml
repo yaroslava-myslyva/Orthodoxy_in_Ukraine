@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/fragment_calendar_today"
+        android:title="@string/fragment_label_calendar_today" />
+    <item
+        android:id="@+id/fragment_calendar_month"
+        android:title="@string/fragment_label_calendar_month" />
+    <item
+        android:id="@+id/fragment_prayer_book"
+        android:title="@string/fragment_label_prayer_book" />
+    <item
+        android:id="@+id/fragment_quotes"
+        android:title="@string/fragment_label_quotes" />
+</menu>

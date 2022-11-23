@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    app:startDestination="@id/fragment_calendar_today"
+    android:id="@+id/navigation">
+
+    <fragment
+        android:id="@+id/fragment_calendar_today"
+        android:name="com.example.orthodoxy_in_ukraine.calendar_today.CalendarTodayFragment"
+        android:label="@string/fragment_label_calendar_today"
+        tools:layout="@layout/fragment_calendar_today"/>
+
+    <fragment
+        android:id="@+id/fragment_calendar_month"
+        android:name="com.example.orthodoxy_in_ukraine.calendar_month.CalendarMonthFragment"
+        android:label="@string/fragment_label_calendar_month"
+        tools:layout="@layout/fragment_calendar_month"/>
+
+    <fragment
+        android:id="@+id/fragment_prayer_book"
+        android:name="com.example.orthodoxy_in_ukraine.prayer_book.PrayerBookFragment"
+        android:label="@string/fragment_label_prayer_book"
+        tools:layout="@layout/fragment_prayer_book"/>
+
+    <fragment
+        android:id="@+id/fragment_quotes"
+        android:name="com.example.orthodoxy_in_ukraine.quotes.QuotesFragment"
+        android:label="@string/fragment_label_quotes"
+        tools:layout="@layout/fragment_quotes"/>
+
+</navigation>

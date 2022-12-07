@@ -3,11 +3,13 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/AndroidStudioProjects/Yasya/Orthodoxy_in_Ukraine/app/src/main/res/drawable/ic_launcher_my_background.xml" value="0.1465" />
         <entry key="..\:/AndroidStudioProjects/Yasya/Orthodoxy_in_Ukraine/app/src/main/res/layout/activity_main.xml" value="0.20503597122302158" />
         <entry key="..\:/AndroidStudioProjects/Yasya/Orthodoxy_in_Ukraine/app/src/main/res/layout/fragment_calendar_today.xml" value="0.25769927536231885" />
         <entry key="..\:/AndroidStudioProjects/Yasya/Orthodoxy_in_Ukraine/app/src/main/res/layout/fragment_monthly_calendar.xml" value="0.25769927536231885" />
         <entry key="..\:/AndroidStudioProjects/Yasya/Orthodoxy_in_Ukraine/app/src/main/res/layout/fragment_prayer_book.xml" value="0.25769927536231885" />
         <entry key="..\:/AndroidStudioProjects/Yasya/Orthodoxy_in_Ukraine/app/src/main/res/menu/menu_navigation.xml" value="0.3265625" />
+        <entry key="..\:/AndroidStudioProjects/Yasya/Orthodoxy_in_Ukraine/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.1465" />
       </map>
     </option>
   </component>

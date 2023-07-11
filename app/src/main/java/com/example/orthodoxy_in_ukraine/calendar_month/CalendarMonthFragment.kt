@@ -38,24 +38,58 @@ class CalendarMonthFragment : Fragment() {
 
     }
 
-    private fun buildingCalendarTable(){
-        val calendar = GregorianCalendar(TimeZone.getTimeZone("UTC"))
+    private fun buildingCalendarTable() {
+        val calendar = GregorianCalendar(TimeZone.getTimeZone("GMT+2:00"))
+        calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), 1)
+
+        val dayOfWeekFirstDayOfMonth = calendar.get(Calendar.DAY_OF_WEEK) - 1
+        val numberOfEmptyCells = dayOfWeekFirstDayOfMonth - 1
+        for (i in 1..numberOfEmptyCells) {
+            val button = Button(this.requireContext())
+            button.gravity = Gravity.CENTER
+            val params = LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
+            params.width = 150
+            params.setMargins(2, 2, 2, 2)
+            button.setPadding(5, 5, 5, 5)
+            button.layoutParams = params
+
+            binding.calendarTable.addView(button, i - 1)
+        }
 
         val lengthOfCurrentMonth = calendar.getActualMaximum(Calendar.DAY_OF_MONTH)
 
         for (i in 1..lengthOfCurrentMonth) {
-            val b = Button(this.requireContext())
-            b.gravity = Gravity.CENTER
+            val button = Button(this.requireContext())
+            button.gravity = Gravity.CENTER
             val params = LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
             params.width = 150
             params.setMargins(2, 2, 2, 2)
-            b.setPadding(5, 5, 5, 5)
-            b.layoutParams = params
-            b.text = i.toString()
+            button.setPadding(5, 5, 5, 5)
+            button.layoutParams = params
+            button.text = i.toString()
 
-            binding.calendarTable.addView(b, i - 1)
+            binding.calendarTable.addView(button, i - 1 + numberOfEmptyCells)
         }
 
+        calendar.set(
+            calendar.get(Calendar.YEAR),
+            calendar.get(Calendar.MONTH),
+            lengthOfCurrentMonth
+        )
+        val dayOfWeekLastDayOfMonth = calendar.get(Calendar.DAY_OF_WEEK) - 1
+        val numberOfEmptyCells2 = 7 - dayOfWeekLastDayOfMonth
+
+        for (i in 1..numberOfEmptyCells2) {
+            val button = Button(this.requireContext())
+            button.gravity = Gravity.CENTER
+            val params = LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
+            params.width = 150
+            params.setMargins(2, 2, 2, 2)
+            button.setPadding(5, 5, 5, 5)
+            button.layoutParams = params
+
+            binding.calendarTable.addView(button, i - 1 + numberOfEmptyCells + lengthOfCurrentMonth)
+        }
     }
 
 }

@@ -21,6 +21,9 @@ class CalendarMonthFragment : Fragment() {
 
     private lateinit var viewModel: CalendarMonthViewModel
     private lateinit var binding: FragmentCalendarMonthBinding
+    private val calendar = GregorianCalendar(TimeZone.getTimeZone("GMT+2:00"))
+    private var yearOnDisplay = calendar.get(Calendar.YEAR)
+    private var monthOnDisplay = calendar.get(Calendar.MONTH)
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -34,13 +37,53 @@ class CalendarMonthFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProvider(this).get(CalendarMonthViewModel::class.java)
-        buildingCalendarTable()
+        buildingCalendarView()
+
+        binding.monthNavigationPrevious.setOnClickListener {
+            monthOnDisplay -= 1
+            buildingCalendarView()
+        }
+
+        binding.monthNavigationNext.setOnClickListener {
+            monthOnDisplay += 1
+            buildingCalendarView()
+        }
 
     }
 
-    private fun buildingCalendarTable() {
-        val calendar = GregorianCalendar(TimeZone.getTimeZone("GMT+2:00"))
-        calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), 1)
+    private fun definitionNameOfMonth() {
+        while (monthOnDisplay < 0) {
+            yearOnDisplay -= 1
+            monthOnDisplay += 12
+        }
+        while (monthOnDisplay > 11) {
+            yearOnDisplay += 1
+            monthOnDisplay -= 12
+        }
+        with(binding.monthName) {
+            text = when (monthOnDisplay) {
+                Calendar.JANUARY -> JANUARY
+                Calendar.FEBRUARY -> FEBRUARY
+                Calendar.MARCH -> MARCH
+                Calendar.APRIL -> APRIL
+                Calendar.MAY -> MAY
+                Calendar.JUNE -> JUNE
+                Calendar.JULY -> JULY
+                Calendar.AUGUST -> AUGUST
+                Calendar.SEPTEMBER -> SEPTEMBER
+                Calendar.OCTOBER -> OCTOBER
+                Calendar.NOVEMBER -> NOVEMBER
+                Calendar.DECEMBER -> DECEMBER
+                else -> "помилка"
+            }
+        }
+    }
+
+    private fun buildingCalendarView() {
+        definitionNameOfMonth()
+        binding.calendarTable.removeAllViews()
+        Log.d("ttt", "f - $monthOnDisplay, $yearOnDisplay")
+        calendar.set(yearOnDisplay, monthOnDisplay, 1)
 
         val dayOfWeekFirstDayOfMonth = calendar.get(Calendar.DAY_OF_WEEK) - 1
         val numberOfEmptyCells = dayOfWeekFirstDayOfMonth - 1
@@ -93,3 +136,16 @@ class CalendarMonthFragment : Fragment() {
     }
 
 }
+
+const val JANUARY = "Січень"
+const val FEBRUARY = "Лютий"
+const val MARCH = "Березень"
+const val APRIL = "Квітень"
+const val MAY = "Травень"
+const val JUNE = "Червень"
+const val JULY = "Липень"
+const val AUGUST = "Серпень"
+const val SEPTEMBER = "Вересень"
+const val OCTOBER = "Жовтень"
+const val NOVEMBER = "Листопад"
+const val DECEMBER = "Грудень"

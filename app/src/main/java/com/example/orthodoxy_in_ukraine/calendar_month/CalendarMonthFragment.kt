@@ -48,7 +48,6 @@ class CalendarMonthFragment : Fragment() {
             monthOnDisplay += 1
             buildingCalendarView()
         }
-
     }
 
     private fun definitionNameOfMonth() {
@@ -82,10 +81,10 @@ class CalendarMonthFragment : Fragment() {
     private fun buildingCalendarView() {
         definitionNameOfMonth()
         binding.calendarTable.removeAllViews()
-        Log.d("ttt", "f - $monthOnDisplay, $yearOnDisplay")
         calendar.set(yearOnDisplay, monthOnDisplay, 1)
 
-        val dayOfWeekFirstDayOfMonth = calendar.get(Calendar.DAY_OF_WEEK) - 1
+        var dayOfWeekFirstDayOfMonth = calendar.get(Calendar.DAY_OF_WEEK) - 1
+        if (dayOfWeekFirstDayOfMonth == 0) dayOfWeekFirstDayOfMonth = 7
         val numberOfEmptyCells = dayOfWeekFirstDayOfMonth - 1
         for (i in 1..numberOfEmptyCells) {
             val button = Button(this.requireContext())
@@ -119,7 +118,8 @@ class CalendarMonthFragment : Fragment() {
             calendar.get(Calendar.MONTH),
             lengthOfCurrentMonth
         )
-        val dayOfWeekLastDayOfMonth = calendar.get(Calendar.DAY_OF_WEEK) - 1
+        var dayOfWeekLastDayOfMonth = calendar.get(Calendar.DAY_OF_WEEK) - 1
+        if (dayOfWeekLastDayOfMonth == 0) dayOfWeekLastDayOfMonth = 7
         val numberOfEmptyCells2 = 7 - dayOfWeekLastDayOfMonth
 
         for (i in 1..numberOfEmptyCells2) {
@@ -134,7 +134,6 @@ class CalendarMonthFragment : Fragment() {
             binding.calendarTable.addView(button, i - 1 + numberOfEmptyCells + lengthOfCurrentMonth)
         }
     }
-
 }
 
 const val JANUARY = "Січень"

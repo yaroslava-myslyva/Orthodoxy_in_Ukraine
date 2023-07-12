@@ -1,5 +1,10 @@
 package com.example.orthodoxy_in_ukraine.calendar_month
 
+import android.annotation.SuppressLint
+import android.graphics.Color
+import android.graphics.Typeface
+import android.graphics.drawable.ColorDrawable
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.util.Log
 import android.view.Gravity
@@ -10,6 +15,7 @@ import android.widget.Button
 import android.widget.LinearLayout.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.example.orthodoxy_in_ukraine.R
 import com.example.orthodoxy_in_ukraine.databinding.FragmentCalendarMonthBinding
 import java.util.*
 
@@ -110,6 +116,10 @@ class CalendarMonthFragment : Fragment() {
             button.layoutParams = params
             button.text = i.toString()
 
+            when(yearOnDisplay){
+                2023 -> settingColorOfDay2023(button)
+            }
+
             binding.calendarTable.addView(button, i - 1 + numberOfEmptyCells)
         }
 
@@ -131,8 +141,43 @@ class CalendarMonthFragment : Fragment() {
             button.setPadding(5, 5, 5, 5)
             button.layoutParams = params
 
+
             binding.calendarTable.addView(button, i - 1 + numberOfEmptyCells + lengthOfCurrentMonth)
         }
+    }
+
+    private fun settingColorOfDay2023(button: Button) {
+        val date = Integer.parseInt(button.text as String)
+        if (isFast(date)) {
+
+            return
+        }
+        if (isSundayOrBigHolyday(date)) {
+
+            return
+        }
+        if (isEaster(date)) {
+            button.setBackgroundResource(R.color.light_red)
+            button.setTextColor(Color.parseColor("#6A0C14"))
+            //button.typeface = Typeface.DEFAULT_BOLD
+            return
+        }
+
+    }
+
+    private fun isEaster(date : Int): Boolean {
+        if (date == 16 && monthOnDisplay == Calendar.APRIL && yearOnDisplay == 2023) {
+            return true
+        }
+        return false
+    }
+
+    private fun isFast(date : Int): Boolean {
+        return false
+    }
+
+    private fun isSundayOrBigHolyday(date : Int): Boolean {
+        return false
     }
 }
 

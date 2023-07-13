@@ -1,4 +1,4 @@
-package com.example.orthodoxy_in_ukraine.calendar_month
+package com.example.orthodoxy_in_ukraine.calendar.calendar_month
 
 import androidx.lifecycle.ViewModel
 

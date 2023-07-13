@@ -1,4 +1,4 @@
-package com.example.orthodoxy_in_ukraine.calendar_month
+package com.example.orthodoxy_in_ukraine.calendar.calendar_month
 
 import android.annotation.SuppressLint
 import android.graphics.Color
@@ -16,6 +16,7 @@ import android.widget.LinearLayout.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.orthodoxy_in_ukraine.R
+import com.example.orthodoxy_in_ukraine.calendar.EventDateByYearFiller
 import com.example.orthodoxy_in_ukraine.databinding.FragmentCalendarMonthBinding
 import java.util.*
 
@@ -54,34 +55,10 @@ class CalendarMonthFragment : Fragment() {
             monthOnDisplay += 1
             buildingCalendarView()
         }
-    }
 
-    private fun definitionNameOfMonth() {
-        while (monthOnDisplay < 0) {
-            yearOnDisplay -= 1
-            monthOnDisplay += 12
-        }
-        while (monthOnDisplay > 11) {
-            yearOnDisplay += 1
-            monthOnDisplay -= 12
-        }
-        with(binding.monthName) {
-            text = when (monthOnDisplay) {
-                Calendar.JANUARY -> JANUARY
-                Calendar.FEBRUARY -> FEBRUARY
-                Calendar.MARCH -> MARCH
-                Calendar.APRIL -> APRIL
-                Calendar.MAY -> MAY
-                Calendar.JUNE -> JUNE
-                Calendar.JULY -> JULY
-                Calendar.AUGUST -> AUGUST
-                Calendar.SEPTEMBER -> SEPTEMBER
-                Calendar.OCTOBER -> OCTOBER
-                Calendar.NOVEMBER -> NOVEMBER
-                Calendar.DECEMBER -> DECEMBER
-                else -> "помилка"
-            }
-        }
+        val eventDateByYearFiller = EventDateByYearFiller()
+        val list = eventDateByYearFiller.fetchListDatesWithEvents(EventDateByYearFiller.YearBetweenEasters.YEAR_2023_2024)
+        Log.d("ttt", "list - $list")
     }
 
     private fun buildingCalendarView() {
@@ -149,7 +126,9 @@ class CalendarMonthFragment : Fragment() {
     private fun settingColorOfDay2023(button: Button) {
         val date = Integer.parseInt(button.text as String)
         if (isFast(date)) {
+            if (isSundayOrBigHolyday(date)) {
 
+            }
             return
         }
         if (isSundayOrBigHolyday(date)) {
@@ -178,6 +157,34 @@ class CalendarMonthFragment : Fragment() {
 
     private fun isSundayOrBigHolyday(date : Int): Boolean {
         return false
+    }
+
+    private fun definitionNameOfMonth() {
+        while (monthOnDisplay < 0) {
+            yearOnDisplay -= 1
+            monthOnDisplay += 12
+        }
+        while (monthOnDisplay > 11) {
+            yearOnDisplay += 1
+            monthOnDisplay -= 12
+        }
+        with(binding.monthName) {
+            text = when (monthOnDisplay) {
+                Calendar.JANUARY -> JANUARY
+                Calendar.FEBRUARY -> FEBRUARY
+                Calendar.MARCH -> MARCH
+                Calendar.APRIL -> APRIL
+                Calendar.MAY -> MAY
+                Calendar.JUNE -> JUNE
+                Calendar.JULY -> JULY
+                Calendar.AUGUST -> AUGUST
+                Calendar.SEPTEMBER -> SEPTEMBER
+                Calendar.OCTOBER -> OCTOBER
+                Calendar.NOVEMBER -> NOVEMBER
+                Calendar.DECEMBER -> DECEMBER
+                else -> "помилка"
+            }
+        }
     }
 }
 

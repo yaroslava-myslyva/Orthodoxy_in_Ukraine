@@ -7,13 +7,13 @@
 
     <fragment
         android:id="@+id/fragment_calendar_today"
-        android:name="com.example.orthodoxy_in_ukraine.calendar_today.CalendarTodayFragment"
+        android:name="com.example.orthodoxy_in_ukraine.calendar.calendar_today.CalendarTodayFragment"
         android:label="@string/fragment_label_calendar_today"
         tools:layout="@layout/fragment_calendar_today"/>
 
     <fragment
         android:id="@+id/fragment_calendar_month"
-        android:name="com.example.orthodoxy_in_ukraine.calendar_month.CalendarMonthFragment"
+        android:name="com.example.orthodoxy_in_ukraine.calendar.calendar_month.CalendarMonthFragment"
         android:label="@string/fragment_label_calendar_month"
         tools:layout="@layout/fragment_calendar_month"/>
 

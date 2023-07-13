@@ -1,12 +1,7 @@
 package com.example.orthodoxy_in_ukraine.calendar.calendar_month
 
-import android.annotation.SuppressLint
 import android.graphics.Color
-import android.graphics.Typeface
-import android.graphics.drawable.ColorDrawable
-import android.graphics.drawable.Drawable
 import android.os.Bundle
-import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -16,7 +11,7 @@ import android.widget.LinearLayout.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.orthodoxy_in_ukraine.R
-import com.example.orthodoxy_in_ukraine.calendar.EventDateByYearFiller
+import com.example.orthodoxy_in_ukraine.calendar.DateFillerWithRollingEvents
 import com.example.orthodoxy_in_ukraine.databinding.FragmentCalendarMonthBinding
 import java.util.*
 
@@ -56,9 +51,10 @@ class CalendarMonthFragment : Fragment() {
             buildingCalendarView()
         }
 
-        val eventDateByYearFiller = EventDateByYearFiller()
-        val list = eventDateByYearFiller.fetchListDatesWithEvents(EventDateByYearFiller.YearBetweenEasters.YEAR_2023_2024)
-        Log.d("ttt", "list - $list")
+        val rollingEvents = DateFillerWithRollingEvents()
+        val list =
+            rollingEvents.fetchListDatesWithRollingEvents(DateFillerWithRollingEvents.YearBetweenEasters.YEAR_2023_2024)
+        // непереходящі свята
     }
 
     private fun buildingCalendarView() {
@@ -93,7 +89,7 @@ class CalendarMonthFragment : Fragment() {
             button.layoutParams = params
             button.text = i.toString()
 
-            when(yearOnDisplay){
+            when (yearOnDisplay) {
                 2023 -> settingColorOfDay2023(button)
             }
 
@@ -144,18 +140,18 @@ class CalendarMonthFragment : Fragment() {
 
     }
 
-    private fun isEaster(date : Int): Boolean {
+    private fun isEaster(date: Int): Boolean {
         if (date == 16 && monthOnDisplay == Calendar.APRIL && yearOnDisplay == 2023) {
             return true
         }
         return false
     }
 
-    private fun isFast(date : Int): Boolean {
+    private fun isFast(date: Int): Boolean {
         return false
     }
 
-    private fun isSundayOrBigHolyday(date : Int): Boolean {
+    private fun isSundayOrBigHolyday(date: Int): Boolean {
         return false
     }
 

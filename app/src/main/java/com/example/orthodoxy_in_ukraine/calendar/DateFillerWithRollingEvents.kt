@@ -20,6 +20,28 @@ class DateFillerWithRollingEvents() { //переходящі свята
         while (currentDayDate.compareTo(dateOfEasterInSecondYear) != 0) {
             saveCurrentCalendar()
 
+            // за інтом
+                // 1 сплошная
+                // 2 звичайні дні
+                // 3 Трійця
+                // 4 сплошная
+            // 5 піст
+            // не за інтом
+                // до Хрещення
+                    // 6 петра і павла
+                     // 7 звичайні
+                    // 8 успеньський
+                    // 9 звичайні
+                    // 10 різдвяний
+                    // 11 сплошная
+                // після Хрещення
+                    // 12 звичайні
+                    // від наступної Пасхи
+                        // 13 сплошная
+                        // 14 звичайні
+                        // 15 сплошная
+                        // 16 Великий піст
+
             val dateWithEvents = makeDateWithEvents(calendar, yearBetweenEasters)
             listDateWithEvents.add(dateWithEvents)
 

@@ -2,6 +2,7 @@ package com.example.orthodoxy_in_ukraine.calendar.calendar_month
 
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -12,6 +13,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.orthodoxy_in_ukraine.R
 import com.example.orthodoxy_in_ukraine.calendar.DateFillerWithRollingEvents
+import com.example.orthodoxy_in_ukraine.calendar.DateWithEvents
 import com.example.orthodoxy_in_ukraine.databinding.FragmentCalendarMonthBinding
 import java.util.*
 
@@ -39,6 +41,8 @@ class CalendarMonthFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProvider(this).get(CalendarMonthViewModel::class.java)
+
+
         buildingCalendarView()
 
         binding.monthNavigationPrevious.setOnClickListener {
@@ -51,17 +55,31 @@ class CalendarMonthFragment : Fragment() {
             buildingCalendarView()
         }
 
-        val rollingEvents = DateFillerWithRollingEvents()
-        val list =
-            rollingEvents.fetchListDatesWithRollingEvents(DateFillerWithRollingEvents.YearBetweenEasters.YEAR_2023_2024)
-        // непереходящі свята
+
     }
 
     private fun buildingCalendarView() {
         definitionNameOfMonth()
         binding.calendarTable.removeAllViews()
         calendar.set(yearOnDisplay, monthOnDisplay, 1)
+        val firstMonthDay = calendar.time
+        calendar.set(
+            yearOnDisplay,
+            monthOnDisplay,
+            calendar.getActualMaximum(Calendar.DAY_OF_MONTH)
+        )
+        val lastMonthDay = calendar.time
 
+        val rollingEvents = DateFillerWithRollingEvents()
+        val list =
+            rollingEvents.fetchListDatesWithRollingEvents(DateFillerWithRollingEvents.YearBetweenEasters.YEAR_2023_2024)
+        // непереходящі свята
+        val monthList = list.filter { it.date >= firstMonthDay && it.date < lastMonthDay || it.date.toString() == lastMonthDay.toString()}
+
+        Log.d("ttt", "lastMonthDay = $lastMonthDay")
+        Log.d("ttt", "monthList = $monthList")
+
+        calendar.set(yearOnDisplay, monthOnDisplay, 1)
         var dayOfWeekFirstDayOfMonth = calendar.get(Calendar.DAY_OF_WEEK) - 1
         if (dayOfWeekFirstDayOfMonth == 0) dayOfWeekFirstDayOfMonth = 7
         val numberOfEmptyCells = dayOfWeekFirstDayOfMonth - 1
@@ -89,8 +107,14 @@ class CalendarMonthFragment : Fragment() {
             button.layoutParams = params
             button.text = i.toString()
 
-            when (yearOnDisplay) {
-                2023 -> settingColorOfDay2023(button)
+            calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), i)
+            val currentDay = calendar.time
+            Log.d("ttt", "currentDay - $currentDay")
+            val currentDayInList = monthList.find { it.date.toString() == currentDay.toString() }
+            Log.d("ttt", "currentDayInList - $currentDayInList")
+            if (currentDayInList != null) {
+                Log.d("ttt", "i'm working")
+                settingColorOfDay(button, currentDayInList)
             }
 
             binding.calendarTable.addView(button, i - 1 + numberOfEmptyCells)
@@ -119,19 +143,20 @@ class CalendarMonthFragment : Fragment() {
         }
     }
 
-    private fun settingColorOfDay2023(button: Button) {
-        val date = Integer.parseInt(button.text as String)
-        if (isFast(date)) {
-            if (isSundayOrBigHolyday(date)) {
+    private fun settingColorOfDay(button: Button, dateWithEvents: DateWithEvents) {
+
+        if (dateWithEvents.isFast) {
+            if (dateWithEvents.isSundayOrBigHolyday) {
 
             }
+            button.setBackgroundResource(R.color.light_brown)
             return
         }
-        if (isSundayOrBigHolyday(date)) {
+        if (dateWithEvents.isSundayOrBigHolyday) {
 
             return
         }
-        if (isEaster(date)) {
+        if (dateWithEvents.isEaster) {
             button.setBackgroundResource(R.color.light_red)
             button.setTextColor(Color.parseColor("#6A0C14"))
             //button.typeface = Typeface.DEFAULT_BOLD
@@ -140,20 +165,6 @@ class CalendarMonthFragment : Fragment() {
 
     }
 
-    private fun isEaster(date: Int): Boolean {
-        if (date == 16 && monthOnDisplay == Calendar.APRIL && yearOnDisplay == 2023) {
-            return true
-        }
-        return false
-    }
-
-    private fun isFast(date: Int): Boolean {
-        return false
-    }
-
-    private fun isSundayOrBigHolyday(date: Int): Boolean {
-        return false
-    }
 
     private fun definitionNameOfMonth() {
         while (monthOnDisplay < 0) {

@@ -11,6 +11,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_new_round"
         android:supportsRtl="true"
+        android:screenOrientation="fullSensor"
         android:theme="@style/Theme.Orthodoxy_in_Ukraine"
         tools:targetApi="31">
         <receiver

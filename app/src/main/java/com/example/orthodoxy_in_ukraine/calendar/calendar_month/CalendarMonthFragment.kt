@@ -89,7 +89,6 @@ class CalendarMonthFragment : Fragment() {
             val params = LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
             params.width = 150
             params.setMargins(2, 2, 2, 2)
-            button.setPadding(5, 5, 5, 5)
             button.layoutParams = params
 
             binding.calendarTable.addView(button, i - 1)
@@ -101,12 +100,14 @@ class CalendarMonthFragment : Fragment() {
             val button = Button(this.requireContext())
             button.gravity = Gravity.CENTER
             val params = LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
-            params.width = 150
-            params.setMargins(2, 2, 2, 2)
-            button.setPadding(5, 5, 5, 5)
+            params.width = 130
+            params.height = 100
+            params.gravity = Gravity.CENTER
+            params.setMargins(8, 8, 8, 8)
+
             button.layoutParams = params
             button.text = i.toString()
-
+            button.setBackgroundResource(R.drawable.btn)
             calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), i)
             val currentDay = calendar.time
             Log.d("ttt", "currentDay - $currentDay")
@@ -135,7 +136,6 @@ class CalendarMonthFragment : Fragment() {
             val params = LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
             params.width = 150
             params.setMargins(2, 2, 2, 2)
-            button.setPadding(5, 5, 5, 5)
             button.layoutParams = params
 
 
@@ -149,7 +149,7 @@ class CalendarMonthFragment : Fragment() {
             if (dateWithEvents.isSundayOrBigHolyday) {
 
             }
-            button.setBackgroundResource(R.color.light_brown)
+            button.setBackgroundResource(R.drawable.btn)
             return
         }
         if (dateWithEvents.isSundayOrBigHolyday) {
@@ -157,7 +157,7 @@ class CalendarMonthFragment : Fragment() {
             return
         }
         if (dateWithEvents.isEaster) {
-            button.setBackgroundResource(R.color.light_red)
+
             button.setTextColor(Color.parseColor("#6A0C14"))
             //button.typeface = Typeface.DEFAULT_BOLD
             return

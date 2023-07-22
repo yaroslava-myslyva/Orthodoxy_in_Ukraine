@@ -42,7 +42,6 @@ class CalendarMonthFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProvider(this).get(CalendarMonthViewModel::class.java)
 
-
         buildingCalendarView()
 
         binding.monthNavigationPrevious.setOnClickListener {
@@ -79,6 +78,13 @@ class CalendarMonthFragment : Fragment() {
         Log.d("ttt", "lastMonthDay = $lastMonthDay")
         Log.d("ttt", "monthList = $monthList")
 
+        val params = LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
+        params.width = 130
+        params.height = 100
+        params.gravity = Gravity.CENTER
+        params.setMargins(8, 8, 8, 8)
+
+        // порожні 1
         calendar.set(yearOnDisplay, monthOnDisplay, 1)
         var dayOfWeekFirstDayOfMonth = calendar.get(Calendar.DAY_OF_WEEK) - 1
         if (dayOfWeekFirstDayOfMonth == 0) dayOfWeekFirstDayOfMonth = 7
@@ -86,25 +92,18 @@ class CalendarMonthFragment : Fragment() {
         for (i in 1..numberOfEmptyCells) {
             val button = Button(this.requireContext())
             button.gravity = Gravity.CENTER
-            val params = LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
-            params.width = 150
-            params.setMargins(2, 2, 2, 2)
             button.layoutParams = params
+            button.setBackgroundResource(R.drawable.btn_empty)
 
             binding.calendarTable.addView(button, i - 1)
         }
 
+        // заповнені
         val lengthOfCurrentMonth = calendar.getActualMaximum(Calendar.DAY_OF_MONTH)
 
         for (i in 1..lengthOfCurrentMonth) {
             val button = Button(this.requireContext())
             button.gravity = Gravity.CENTER
-            val params = LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
-            params.width = 130
-            params.height = 100
-            params.gravity = Gravity.CENTER
-            params.setMargins(8, 8, 8, 8)
-
             button.layoutParams = params
             button.text = i.toString()
             button.setBackgroundResource(R.drawable.btn)
@@ -121,6 +120,7 @@ class CalendarMonthFragment : Fragment() {
             binding.calendarTable.addView(button, i - 1 + numberOfEmptyCells)
         }
 
+        // порожні 2
         calendar.set(
             calendar.get(Calendar.YEAR),
             calendar.get(Calendar.MONTH),
@@ -133,11 +133,8 @@ class CalendarMonthFragment : Fragment() {
         for (i in 1..numberOfEmptyCells2) {
             val button = Button(this.requireContext())
             button.gravity = Gravity.CENTER
-            val params = LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
-            params.width = 150
-            params.setMargins(2, 2, 2, 2)
             button.layoutParams = params
-
+            button.setBackgroundResource(R.drawable.btn_empty)
 
             binding.calendarTable.addView(button, i - 1 + numberOfEmptyCells + lengthOfCurrentMonth)
         }

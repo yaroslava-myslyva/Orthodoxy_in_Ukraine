@@ -9,15 +9,9 @@ import com.example.orthodoxy_in_ukraine.databinding.ActivityMainBinding
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity : AppCompatActivity() {
-    //https://medium.com/meetu-engineering/create-your-custom-calendar-view-10ff41f39bfe
 
-    //Существуют такие кейсы, когда в программе должны храниться какие-либо первоначальные значения,
-    // и чтобы не плодить заполнение в коде, можно создать файлик БД .db и заполнить room из данного файла.
-    // Допустим у нас имеется файл созданный в программе DB Browser for SQLite
-    // и чтобы его подключить необходимо сперва его поместить в специальную директорию “assets”.
-    // Ниже на рисунке указано как создать данную директорию.
+        private lateinit var binding: ActivityMainBinding
 
-    private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,8 +30,8 @@ class MainActivity : AppCompatActivity() {
                 R.id.fragment_quotes
             )
         )
+
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
-
     }
 }

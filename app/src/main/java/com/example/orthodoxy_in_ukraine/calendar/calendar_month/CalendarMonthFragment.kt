@@ -1,6 +1,7 @@
 package com.example.orthodoxy_in_ukraine.calendar.calendar_month
 
 import android.graphics.Color
+import android.graphics.Typeface
 import android.os.Bundle
 import android.util.Log
 import android.view.Gravity
@@ -12,6 +13,7 @@ import android.widget.LinearLayout.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.orthodoxy_in_ukraine.R
+import com.example.orthodoxy_in_ukraine.R.color.red
 import com.example.orthodoxy_in_ukraine.calendar.DateFillerWithRollingEvents
 import com.example.orthodoxy_in_ukraine.calendar.DateWithEvents
 import com.example.orthodoxy_in_ukraine.databinding.FragmentCalendarMonthBinding
@@ -93,7 +95,7 @@ class CalendarMonthFragment : Fragment() {
             val button = Button(this.requireContext())
             button.gravity = Gravity.CENTER
             button.layoutParams = params
-            button.setBackgroundResource(R.drawable.btn_empty)
+            button.setBackgroundResource(R.drawable.button_empty)
 
             binding.calendarTable.addView(button, i - 1)
         }
@@ -106,14 +108,14 @@ class CalendarMonthFragment : Fragment() {
             button.gravity = Gravity.CENTER
             button.layoutParams = params
             button.text = i.toString()
-            button.setBackgroundResource(R.drawable.btn)
+            button.setBackgroundResource(R.drawable.button_ordinary)
             calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), i)
             val currentDay = calendar.time
-            Log.d("ttt", "currentDay - $currentDay")
+
             val currentDayInList = monthList.find { it.date.toString() == currentDay.toString() }
-            Log.d("ttt", "currentDayInList - $currentDayInList")
+
             if (currentDayInList != null) {
-                Log.d("ttt", "i'm working")
+
                 settingColorOfDay(button, currentDayInList)
             }
 
@@ -134,7 +136,7 @@ class CalendarMonthFragment : Fragment() {
             val button = Button(this.requireContext())
             button.gravity = Gravity.CENTER
             button.layoutParams = params
-            button.setBackgroundResource(R.drawable.btn_empty)
+            button.setBackgroundResource(R.drawable.button_empty)
 
             binding.calendarTable.addView(button, i - 1 + numberOfEmptyCells + lengthOfCurrentMonth)
         }
@@ -142,22 +144,18 @@ class CalendarMonthFragment : Fragment() {
 
     private fun settingColorOfDay(button: Button, dateWithEvents: DateWithEvents) {
 
-        if (dateWithEvents.isFast) {
-            if (dateWithEvents.isSundayOrBigHolyday) {
-
-            }
-            button.setBackgroundResource(R.drawable.btn)
-            return
-        }
         if (dateWithEvents.isSundayOrBigHolyday) {
-
-            return
+            button.setTextColor(Color.parseColor("#AF0211"))
+            button.typeface = Typeface.DEFAULT_BOLD
+            if (dateWithEvents.isFast) {
+                button.setBackgroundResource(R.drawable.button_fast)
+            }
+            if (dateWithEvents.isBigHolyday) {
+                button.setBackgroundResource(R.drawable.button_big_holyday)
+            }
         }
-        if (dateWithEvents.isEaster) {
-
-            button.setTextColor(Color.parseColor("#6A0C14"))
-            //button.typeface = Typeface.DEFAULT_BOLD
-            return
+        if (dateWithEvents.isFast) {
+            button.setBackgroundResource(R.drawable.button_fast)
         }
 
     }

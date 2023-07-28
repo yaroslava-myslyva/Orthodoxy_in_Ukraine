@@ -6,7 +6,7 @@ data class DateWithEvents(
     val date: Date,
     var isFast: Boolean = false,
     var isSundayOrBigHolyday: Boolean = false,
-    var isEaster: Boolean = false,
+    var isBigHolyday: Boolean = false,
     val holydays: MutableList<Holyday> = mutableListOf<Holyday>()
 
 ) {

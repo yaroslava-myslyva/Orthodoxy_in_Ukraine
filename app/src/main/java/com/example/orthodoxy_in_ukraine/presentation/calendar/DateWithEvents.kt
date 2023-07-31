@@ -1,4 +1,4 @@
-package com.example.orthodoxy_in_ukraine.calendar
+package com.example.orthodoxy_in_ukraine.presentation.calendar
 
 import java.util.Date
 

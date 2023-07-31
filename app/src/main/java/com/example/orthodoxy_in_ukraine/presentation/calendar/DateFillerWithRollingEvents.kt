@@ -1,16 +1,25 @@
-package com.example.orthodoxy_in_ukraine.calendar
+package com.example.orthodoxy_in_ukraine.presentation.calendar
 
+import android.content.Context
+import android.util.Log
+import com.example.orthodoxy_in_ukraine.app.OrthodoxyApplication.Companion.applicationScope
+import com.example.orthodoxy_in_ukraine.data.db.EventsDataBase
+import com.example.orthodoxy_in_ukraine.data.db.model.EventEntity
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.properties.Delegates
 
 class DateFillerWithRollingEvents() { //переходящі свята
+    private lateinit var listOfHolydays: List<Holyday>
     val calendar = GregorianCalendar(TimeZone.getTimeZone("GMT+2:00"))
     private var saveCurrentDay by Delegates.notNull<Int>()
     private var saveCurrentMonth by Delegates.notNull<Int>()
     private var saveCurrentYear by Delegates.notNull<Int>()
 
-    public fun fetchListDatesWithRollingEvents(yearBetweenEasters: DateFillerWithRollingEvents.YearBetweenEasters): ArrayList<DateWithEvents> {
+    public fun fetchListDatesWithRollingEvents(yearBetweenEasters: YearBetweenEasters): ArrayList<DateWithEvents> {
         val listDateWithEventsForYear = arrayListOf<DateWithEvents>()
         calendar.time = yearBetweenEasters.dateOfEasterInFirstYear
         val dateOfEasterInSecondYear = yearBetweenEasters.dateOfEasterInSecondYear
@@ -19,8 +28,6 @@ class DateFillerWithRollingEvents() { //переходящі свята
 
         while (currentDayDate.compareTo(dateOfEasterInSecondYear) != 0) {
             saveCurrentCalendar()
-
-
 
 
             val dateWithEvents = makeDateWithEvents(calendar, yearBetweenEasters, counter)
@@ -36,65 +43,87 @@ class DateFillerWithRollingEvents() { //переходящі свята
 
     private fun makeDateWithEvents(
         calendar: GregorianCalendar,
-        years: DateFillerWithRollingEvents.YearBetweenEasters,
-        counter :Int
+        years: YearBetweenEasters,
+        counter: Int
     ): DateWithEvents {
         val dateWithEvents = DateWithEvents(calendar.time)
 
-        if(counter < 57){
-            if (counter == 0)  dateWithEvents.isBigHolyday = true
+        if (counter < 57) {
+            if (counter == 0) dateWithEvents.isBigHolyday = true
 
-            if(counter in 8..49){
-                if(calendar.get(Calendar.DAY_OF_WEEK) == Calendar.WEDNESDAY || calendar.get(Calendar.DAY_OF_WEEK) == Calendar.FRIDAY){
+            if (counter in 8..49) {
+                if (calendar.get(Calendar.DAY_OF_WEEK) == Calendar.WEDNESDAY || calendar.get(
+                        Calendar.DAY_OF_WEEK
+                    ) == Calendar.FRIDAY
+                ) {
                     dateWithEvents.isFast = true
                 }
             }
-            if(counter == 39){
+            if (counter == 39) {
                 dateWithEvents.isSundayOrBigHolyday = true
                 dateWithEvents.isBigHolyday = true
             }
-            if(counter == 49){
+            if (counter == 49) {
                 dateWithEvents.isSundayOrBigHolyday = true
                 dateWithEvents.isBigHolyday = true
             }
-        } else{
+        } else {
+
             isVelykyyPist(dateWithEvents, calendar, years)
         }
 
-        if(calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY){
+        if (calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
             dateWithEvents.isSundayOrBigHolyday = true
         }
-        // за інтом
-            // 1 сплошная
-            // 2 звичайні дні
-            // 3 Трійця
-            // 4 сплошная
-        // не за інтом
-            // до Хрещення
-                // 5 піст
-                // 6 петра і павла
-                // 7 звичайні
-                // 8 успеньський
-                // 9 звичайні
-                // 10 різдвяний
-                // 11 сплошная
-            // після Хрещення
-                // 12 звичайні
-                // від наступної Пасхи
-                // 13 сплошная
-                // 14 звичайні
-                 // 15 сплошная
-                // 16 Великий піст
 
+        fillingCurrentDateWithNontransitionalHoliday(dateWithEvents)
+        // за інтом
+        // 1 сплошная
+        // 2 звичайні дні
+        // 3 Трійця
+        // 4 сплошная
+        // не за інтом
+        // до Хрещення
+        // 5 піст
+        // 6 петра і павла
+        // 7 звичайні
+        // 8 успеньський
+        // 9 звичайні
+        // 10 різдвяний
+        // 11 сплошная
+        // після Хрещення
+        // 12 звичайні
+        // від наступної Пасхи
+        // 13 сплошная
+        // 14 звичайні
+        // 15 сплошная
+        // 16 Великий піст
 
 
         return dateWithEvents
     }
 
+    private fun fillingCurrentDateWithNontransitionalHoliday(dateWithEvents: DateWithEvents) {
+        saveCurrentCalendar()
+Log.d("ttt", "list - $listOfHolydays")
+        listOfHolydays.forEach {
+            calendar.set(2023, it.month - 1, it.date)
+            if (dateWithEvents.date == calendar.time) {
+                Log.d("ttt", "listOfHolydays є співпадіння ${dateWithEvents.date}")
+                if(it.isBigHolyday == 1){
+                    dateWithEvents.isSundayOrBigHolyday = true
+                    dateWithEvents.isBigHolyday = true
+                }
+            }
+        }
+
+        overwritingSavedCalendar()
+    }
+
     private fun isVelykyyPist(
         dateWithEvents: DateWithEvents,
         calendar: GregorianCalendar,
-        years: DateFillerWithRollingEvents.YearBetweenEasters
+        years: YearBetweenEasters
     ) {
         saveCurrentCalendar()
         val lastDay = years.dateOfEasterInSecondYear
@@ -107,14 +136,18 @@ class DateFillerWithRollingEvents() { //переходящі свята
         overwritingSavedCalendar()
     }
 
-    private fun saveCurrentCalendar(){
+    private fun saveCurrentCalendar() {
         saveCurrentYear = calendar.get(Calendar.YEAR)
         saveCurrentMonth = calendar.get(Calendar.MONTH)
         saveCurrentDay = calendar.get(Calendar.DATE)
     }
 
-    private fun overwritingSavedCalendar(){
+    private fun overwritingSavedCalendar() {
         calendar.set(saveCurrentYear, saveCurrentMonth, saveCurrentDay)
+    }
+
+    fun setListOfHolydays(list: List<Holyday>) {
+        listOfHolydays = list
     }
 
     enum class YearBetweenEasters(

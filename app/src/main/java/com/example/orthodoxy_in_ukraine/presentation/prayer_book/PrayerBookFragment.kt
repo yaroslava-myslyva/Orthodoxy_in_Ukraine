@@ -1,4 +1,4 @@
-package com.example.orthodoxy_in_ukraine.prayer_book
+package com.example.orthodoxy_in_ukraine.presentation.prayer_book
 
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle

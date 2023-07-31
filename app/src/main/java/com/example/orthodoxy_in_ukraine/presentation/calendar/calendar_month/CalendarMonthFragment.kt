@@ -1,4 +1,4 @@
-package com.example.orthodoxy_in_ukraine.calendar.calendar_month
+package com.example.orthodoxy_in_ukraine.presentation.calendar.calendar_month
 
 import android.graphics.Color
 import android.graphics.Typeface
@@ -11,12 +11,20 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.LinearLayout.*
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModelProvider
 import com.example.orthodoxy_in_ukraine.R
-import com.example.orthodoxy_in_ukraine.R.color.red
-import com.example.orthodoxy_in_ukraine.calendar.DateFillerWithRollingEvents
-import com.example.orthodoxy_in_ukraine.calendar.DateWithEvents
+import com.example.orthodoxy_in_ukraine.app.OrthodoxyApplication
+import com.example.orthodoxy_in_ukraine.app.OrthodoxyApplication.Companion.applicationScope
+import com.example.orthodoxy_in_ukraine.data.db.EventsDataBase
+import com.example.orthodoxy_in_ukraine.data.db.model.EventEntity
+import com.example.orthodoxy_in_ukraine.presentation.calendar.DateFillerWithRollingEvents
+import com.example.orthodoxy_in_ukraine.presentation.calendar.DateWithEvents
 import com.example.orthodoxy_in_ukraine.databinding.FragmentCalendarMonthBinding
+import com.example.orthodoxy_in_ukraine.presentation.calendar.Holyday
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.util.*
 
 class CalendarMonthFragment : Fragment() {
@@ -43,23 +51,38 @@ class CalendarMonthFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProvider(this).get(CalendarMonthViewModel::class.java)
+        val dataBase =
+            activity?.let { EventsDataBase.getDataBase(it, applicationScope) }
+        val dao = dataBase?.IEventsDao
+        var listE = listOf<EventEntity>()
+        applicationScope.launch(Dispatchers.IO) {
+            if (dao != null) {
+                listE =  dao.fetchEvents() ?: listOf()
+            }
+            Log.d("tttg", "listE = $listE")
+            val listOfHolydays = mutableListOf<Holyday>()
+            for (plantEntity in listE) {
+                listOfHolydays.add(plantEntity.mapToHolyday())
 
-        buildingCalendarView()
+            }
+            withContext(Dispatchers.Main) {
+                buildingCalendarView(listOfHolydays)
+                binding.monthNavigationPrevious.setOnClickListener {
+                    monthOnDisplay -= 1
+                    buildingCalendarView(listOfHolydays)
+                }
 
-        binding.monthNavigationPrevious.setOnClickListener {
-            monthOnDisplay -= 1
-            buildingCalendarView()
+                binding.monthNavigationNext.setOnClickListener {
+                    monthOnDisplay += 1
+                    buildingCalendarView(listOfHolydays)
+                }
+            }
+
         }
-
-        binding.monthNavigationNext.setOnClickListener {
-            monthOnDisplay += 1
-            buildingCalendarView()
-        }
-
 
     }
 
-    private fun buildingCalendarView() {
+    private fun buildingCalendarView(listOfHolydays: List<Holyday>) {
         definitionNameOfMonth()
         binding.calendarTable.removeAllViews()
         calendar.set(yearOnDisplay, monthOnDisplay, 1)
@@ -72,13 +95,13 @@ class CalendarMonthFragment : Fragment() {
         val lastMonthDay = calendar.time
 
         val rollingEvents = DateFillerWithRollingEvents()
+        rollingEvents.setListOfHolydays(listOfHolydays)
         val list =
             rollingEvents.fetchListDatesWithRollingEvents(DateFillerWithRollingEvents.YearBetweenEasters.YEAR_2023_2024)
         // непереходящі свята
-        val monthList = list.filter { it.date >= firstMonthDay && it.date < lastMonthDay || it.date.toString() == lastMonthDay.toString()}
+        val monthList =
+            list.filter { it.date >= firstMonthDay && it.date < lastMonthDay || it.date.toString() == lastMonthDay.toString() }
 
-        Log.d("ttt", "lastMonthDay = $lastMonthDay")
-        Log.d("ttt", "monthList = $monthList")
 
         val params = LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
         params.width = 130

@@ -1,4 +1,4 @@
-package com.example.orthodoxy_in_ukraine.quotes
+package com.example.orthodoxy_in_ukraine.presentation.quotes
 
 import androidx.lifecycle.ViewModel
 
